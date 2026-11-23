@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="A totally serious status report. (It's a joke.)">
+<title>OPERATION: MAINFRAME</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23030806'/><text x='14' y='70' font-size='62' font-family='monospace' fill='%2339ff88'>&gt;_</text></svg>">
+<style>
+:root{--bg:#030806;--panel:rgba(4,16,11,.86);--line:#17533a;--fg:#b9f5d3;--dim:#74ad91;--hot:#39ff88;--amber:#ffb62e;--red:#ff4f5e}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 Consolas,"Cascadia Mono","SF Mono",Menlo,monospace;overflow-x:hidden}
+#rain{position:fixed;inset:0;width:100%;height:100%;opacity:.3;z-index:-1}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.55))}
+a{color:var(--hot)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+button,input{font:inherit;color:inherit}
+
+#boot{position:fixed;inset:0;z-index:40;background:#020504;padding:8vh 7vw;white-space:pre-wrap;color:var(--hot);cursor:pointer}
+#boot[hidden]{display:none}
+#boot small{position:absolute;bottom:5vh;left:7vw;color:var(--dim)}
+
+.wrap{width:min(1080px,100% - 32px);margin:auto}
+.top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:16px 0;color:var(--dim);font-size:13px}
+.hero{padding:9vh 0 8vh}
+h1{font-size:clamp(2.5rem,9.5vw,6.7rem);line-height:.95;margin:0 0 24px;letter-spacing:-.05em;color:var(--hot);text-shadow:0 0 28px rgba(57,255,136,.4);position:relative}
+h1 span{display:block}
+.glitch{position:relative}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;left:0;top:0;opacity:0}
+.glitch::before{color:var(--red)} .glitch::after{color:#37d5ff}
+.glitch::before{animation:gl 5s infinite steps(1)} .glitch::after{animation:gl 5s .08s infinite steps(1) reverse}
+@keyframes gl{0%,90%,100%{opacity:0;transform:none}91%{opacity:.8;transform:translate(-5px,2px);clip-path:inset(15% 0 55% 0)}94%{opacity:.8;transform:translate(6px,-1px);clip-path:inset(60% 0 12% 0)}97%{opacity:.7;transform:translate(-3px,0);clip-path:inset(35% 0 40% 0)}}
+.lead{max-width:56ch;font-size:17px;margin:0 0 30px}
+.actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;border:1px solid var(--hot);background:rgba(3,8,6,.8);padding:13px 22px;text-decoration:none;font-weight:700;color:var(--hot);cursor:pointer}
+.btn:hover{background:var(--hot);color:#02150a;box-shadow:0 0 30px rgba(57,255,136,.45)}
+.btn.main{background:var(--amber);border-color:var(--amber);color:#211400}
+.btn.main:hover{background:#ffd27a;box-shadow:0 0 34px rgba(255,182,46,.5)}
+
+.panel{background:var(--panel);border:1px solid var(--line);padding:24px;margin-bottom:22px;min-width:0}
+h2{font-size:17px;margin:0 0 16px;color:var(--hot)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.pct{font-size:clamp(2rem,7vw,3.8rem);font-weight:700;color:var(--amber);line-height:1}
+.bar{height:30px;border:1px solid var(--line);padding:3px;margin:16px 0}
+.bar i{display:block;height:100%;width:50%;background:repeating-linear-gradient(90deg,var(--hot) 0 10px,transparent 10px 13px);transition:width .5s}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:22px}
+#log{height:280px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;font-size:13px}
+#log div{overflow-wrap:anywhere} .ok{color:var(--hot)} .warn{color:var(--amber)} .bad{color:var(--red)}
+ul{list-style:none;margin:0;padding:0}
+li{padding:8px 0;border-bottom:1px dashed var(--line)}
+li:last-child{border:0}
+li::before{content:"[ ] ";color:var(--amber)} li.done::before{content:"[x] ";color:var(--hot)} li.done{color:var(--dim)}
+#out{height:240px;overflow-y:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+form{display:flex;gap:10px;border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+form label{color:var(--hot);white-space:nowrap}
+form input{flex:1;min-width:0;background:none;border:0;color:var(--fg);font-size:16px}
+.cause{text-align:center;padding:48px 24px;border-color:var(--amber)}
+.cause h2{font-size:clamp(1.5rem,5vw,2.6rem);line-height:1.15;color:var(--amber)}
+.cause p{max-width:52ch;margin:0 auto 26px}
+footer{color:var(--dim);font-size:13px;padding:14px 0 50px;text-align:center}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);background:#1b1202;border:1px solid var(--amber);color:var(--amber);padding:12px 18px;z-index:35}
+#toast[hidden]{display:none}
+@media(max-width:760px){.grid{grid-template-columns:minmax(0,1fr);gap:0}.hero{padding-top:5vh}}
+@media(prefers-reduced-motion:reduce){.glitch::before,.glitch::after{animation:none}html{scroll-behavior:auto}.bar i{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="boot" hidden></div>
+
+<div class="wrap">
+  <div class="top"><span>user: ANONYMOUS_IT_GUY</span><span>snacks remaining: 2</span><span id="clock"></span></div>
+
+  <header class="hero">
+    <h1><span>Operation:</span><span class="glitch" data-t="Mainframe">Mainframe</span></h1>
+    <p class="lead">You keep asking if I've hacked the mainframe yet. I am halfway done. The remaining half runs on caffeine, and caffeine is not free.</p>
+    <div class="actions">
+      <a class="btn main patreon" href="#">Fund the cause on Patreon</a>
+      <a class="btn" href="#terminal">Open the terminal</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="row"><h2>Mainframe hacked</h2><span class="pct" id="pct">50.00%</span></div>
+      <div class="bar"><i id="fill"></i></div>
+      <div class="row" style="flex-wrap:wrap"><span id="status" role="status">Status: halfway. Awaiting more snacks.</span><button class="btn" id="push" type="button">Hack faster</button></div>
+    </section>
+
+    <div class="grid">
+      <section class="panel"><h2>Live from the operation</h2><div id="log" aria-hidden="true"></div></section>
+      <section class="panel"><h2>The plan</h2><ul>
+        <li class="done">Buy black hoodie</li>
+        <li class="done">Put on sunglasses indoors</li>
+        <li class="done">Type very fast in front of people</li>
+        <li class="done">Say "I'm in"</li>
+        <li>Actually be in</li>
+        <li>Find out what a mainframe is</li>
+        <li>Find out if we have one</li>
+        <li>Coffee (blocked: funding)</li>
+      </ul></section>
+    </div>
+
+    <section class="panel" id="terminal">
+      <h2>Terminal</h2>
+      <div id="out" role="log" tabindex="0" aria-label="Terminal output"></div>
+      <form id="form"><label for="cmd">guest@mainframe:~$</label><input id="cmd" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="help"></form>
+    </section>
+
+    <section class="panel cause">
+      <h2>The other 50% won't hack itself</h2>
+      <p>Every supporter brings us closer to 51%. Your contribution goes directly to snacks, energy drinks, and a second, darker hoodie.</p>
+      <a class="btn main patreon" href="#">Join on Patreon</a>
+    </section>
+  </main>
+  <footer>This site is a joke. No mainframes, dealerships, or computers were hacked.<br>Support is optional and buys snacks, not crimes.</footer>
+</div>
+<div id="toast" role="alert" hidden></div>
+
+<script>
+// ====== PUT YOUR PATREON LINK BETWEEN THE QUOTES ======
+const PATREON_URL = "https://www.patreon.com/GhillieGil";
+// Example: "https://www.patreon.com/YourPageName"
+// ======================================================
+
+const $ = id => document.getElementById(id);
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+
+let toastTimer;
+function toast(msg){ $("toast").textContent = msg; $("toast").hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $("toast").hidden = true, 5000); }
+document.querySelectorAll(".patreon").forEach(a => {
+  if (PATREON_URL) { a.href = PATREON_URL; a.target = "_blank"; a.rel = "noopener noreferrer"; }
+  else a.addEventListener("click", e => { e.preventDefault(); toast("Patreon link not set yet. Add it to PATREON_URL in index.html."); });
+});
+
+// Boot sequence
+const boot = $("boot");
+const bootText = "ESTABLISHING SECURE CONNECTION ...... ok\nROUTING THROUGH 7 BREAK ROOMS ....... ok\nPUTTING ON HOODIE ................... ok\nDIMMING OFFICE LIGHTS ............... ok\nBYPASSING FIREWALL .................. it was off\n\nI'm in. (Halfway.)";
+if (!calm) {
+  boot.hidden = false;
+  const txt = document.createElement("div"), skip = document.createElement("small");
+  skip.textContent = "Click or press any key to skip"; boot.append(txt, skip);
+  let n = 0;
+  const iv = setInterval(() => { n += 4; txt.textContent = bootText.slice(0, n) + "█"; if (n > bootText.length) { clearInterval(iv); setTimeout(end, 900); } }, 35);
+  function end(){ clearInterval(iv); boot.hidden = true; removeEventListener("keydown", end); }
+  boot.onclick = end; addEventListener("keydown", end);
+}
+
+// Code rain
+const c = $("rain"), x = c.getContext("2d"); let drops = [];
+function size(){ c.width = innerWidth; c.height = innerHeight; const n = Math.ceil(c.width / 18); drops = Array.from({length:n}, (_, i) => drops[i] ?? Math.random() * c.height / 18); }
+function rain(){
+  x.fillStyle = "rgba(3,8,6,.09)"; x.fillRect(0, 0, c.width, c.height); x.font = "16px monospace";
+  drops.forEach((y, i) => { x.fillStyle = Math.random() > .96 ? "#eafff2" : "#39ff88"; x.fillText(pick("01ABCDEF<>/{}[]$#%&*+=?VIN"), i * 18, y * 18); drops[i] = y * 18 > c.height && Math.random() > .97 ? 0 : y + 1; });
+}
+size(); addEventListener("resize", size);
+if (calm) for (let i = 0; i < 60; i++) rain(); else setInterval(() => { if (!document.hidden) rain(); }, 55);
+
+setInterval(() => $("clock").textContent = new Date().toLocaleTimeString(), 1000);
+
+// Progress that never gets anywhere
+let p = 50, resetTimer;
+function setP(v){ p = v; $("pct").textContent = v.toFixed(2) + "%"; $("fill").style.width = v + "%"; }
+function hack(){
+  clearTimeout(resetTimer);
+  setP(p + Math.random() * 6 + 2);
+  if (p > 68) { setP(50); return $("status").textContent = pick(["Someone unplugged it to charge their phone. Back to 50%.", "Windows Update restarted the hack. Back to 50%.", "A printer jammed. Nobody knows why that matters. Back to 50%."]); }
+  $("status").textContent = pick(["Typing with both hands...", "Squinting at the screen...", "Opening a second terminal...", "Enhance. ENHANCE.", "Adding more green text..."]);
+  resetTimer = setTimeout(() => { setP(50); $("status").textContent = "You looked away. Back to 50%."; }, 3500);
+}
+$("push").onclick = hack;
+
+// Feed
+const feed = [["ok","Guessed password: password1"],["bad","Access denied. It was password2."],["warn","Printer has detected the intrusion"],["ok","Decrypted lunch menu: tacos"],["warn","Someone asked if it is done yet (attempt 4,812)"],["ok","Downloaded more RAM"],["bad","Firewall is warm. Moving it away from the window."],["ok","Located mainframe. Correction: microwave."],["warn","Caffeine level critical"],["bad","Out of snacks. Operation paused."],["ok","Turned it off and on again"],["warn","Got a ticket about the Wi-Fi. Hacking paused."],["ok","Hoodie hood: UP"]];
+let fi = 0;
+function addFeed(){ const [k, t] = feed[fi++ % feed.length], d = document.createElement("div"); d.className = k; d.textContent = new Date().toLocaleTimeString() + "  " + t; $("log").append(d); while ($("log").children.length > 14) $("log").firstChild.remove(); }
+for (let i = 0; i < 6; i++) addFeed();
+if (!calm) setInterval(addFeed, 1900);
+
+// Terminal
+function print(t){ $("out").append(t + "\n"); $("out").scrollTop = $("out").scrollHeight; }
+print("Guest access granted. Type help to see commands.");
+const cmds = {
+  help: () => "Commands: status, hack, whoami, ls, coffee, sudo, support, clear",
+  status: () => "Hacked: 50%. Same as the last time you asked.",
+  hack: () => { hack(); return "Hacking... progress is now " + p.toFixed(2) + "%. Try not to blink."; },
+  whoami: () => "The person who keeps asking if it's done yet.",
+  ls: () => "evil_plan_FINAL_v7.docx   hoodie_receipts/   i_am_in.mp3   snack_budget.xls",
+  coffee: () => "   ( (\n    ) )\n  ........\n  |      |]\n  \\      /\n   `----'\nError 402: coffee requires funding.",
+  sudo: () => "Nice try. This incident will be reported to the printer.",
+  support: () => PATREON_URL ? "Use the Patreon button, or visit: " + PATREON_URL : "Patreon link not set yet.",
+  clear: () => { $("out").textContent = ""; }
+};
+$("form").onsubmit = e => {
+  e.preventDefault(); const raw = $("cmd").value.trim(); $("cmd").value = ""; if (!raw) return;
+  print("> " + raw); const key = raw.toLowerCase().split(/\s+/)[0];
+  const r = Object.hasOwn(cmds, key) ? cmds[key]() : key + ": not found. Like the mainframe."; if (r) print(r);
+};
+</script>
+</body>
+</html>
